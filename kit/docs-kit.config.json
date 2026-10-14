@@ -1,0 +1,31 @@
+{
+  "root": "../..",
+  "docsDir": "docs",
+  "docsBranch": "docs/developer-docs",
+  "repos": [
+    {
+      "name": "app",
+      "primary": true,
+      "branch": "develop",
+      "code": ["src/**", "config/**", "package.json", ".github/workflows/**"],
+      "ignore": [
+        "docs/**",
+        "ai-prompt-dev-docs-generator/**",
+        "**/*.lock",
+        "package-lock.json",
+        "CHANGELOG.md",
+        "dist/**",
+        "build/**",
+        "coverage/**"
+      ]
+    },
+    {
+      "name": "api",
+      "path": "../api",
+      "pathEnv": "API_REPO_PATH",
+      "branch": "develop",
+      "code": ["src/**", "package.json"],
+      "ignore": ["**/*.lock", "CHANGELOG.md", "dist/**", "coverage/**"]
+    }
+  ]
+}
