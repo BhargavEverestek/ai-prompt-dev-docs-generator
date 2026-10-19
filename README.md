@@ -1,5 +1,8 @@
 # AI prompt: developer docs generator
 
+_Created and maintained by Bhargav Patel ·
+[github.com/BhargavEverestek/ai-prompt-dev-docs-generator](https://github.com/BhargavEverestek/ai-prompt-dev-docs-generator)_
+
 Copy this folder into your project, point your AI coding tool at it, and it
 writes developer documentation for the project. It works with any AI coding tool
 that can read files and run commands in the repo: Claude Code, Cursor, GitHub
