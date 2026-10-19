@@ -47,6 +47,27 @@ plan. It never overwrites existing docs, pages or instruction-file sections
 without asking. If the app already uses the `/docs` URL (for example for API
 docs), it proposes `/dev-docs/` for the in-app UI instead.
 
+**Your code and secrets.** The generator works the way your AI coding tool
+always does: the files the AI reads are sent to your AI provider to be
+processed. The only difference is that it reads more of the project than a
+normal coding session. So it fits any project where your team already uses an AI
+coding tool. If your project doesn't use AI tools yet, check with your tech lead
+first.
+
+- **Secret files stay closed.** The AI never opens `.env` files, keys,
+  certificates or credential files. It learns config from templates like
+  `.env.example` and from the code that reads each setting.
+- **No secrets in the docs.** Config is described by name and file, never by
+  value.
+- **The kit's scripts run locally.** They read the docs and call `git`
+  (`git fetch` from your own remote with `--fetch`). They don't send your code
+  anywhere.
+
+For extra protection, you can also block secret files in your AI tool. For
+example: `permissions.deny` rules such as `Read(./.env*)` in Claude Code's
+`.claude/settings.json`, a `.cursorignore` file in Cursor, or content exclusion
+in GitHub Copilot's settings. Check your tool's docs for the exact format.
+
 Your project doesn't need any AI setup first. `AGENTS.md`, `CLAUDE.md`,
 `.cursorrules` and similar files are read if they exist, and are not needed if
 they don't.

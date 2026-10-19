@@ -81,26 +81,27 @@ writing anything. It stays read-only until checkpoint B.
 5. **Find how it runs and ships.** Look at package scripts, `Makefile`,
    `Dockerfile` and compose files, CI pipelines (`.github/workflows`,
    `.circleci`, `.gitlab-ci.yml`, `Jenkinsfile`, `azure-pipelines.yml`), and any
-   env file templates.
+   env file templates (`.env.example` and similar). Never open real env or
+   secret files (SKILL.md rule 7).
 
 ## Explore (Phase 1)
 
 ### Every project
 
-| Area                     | What to find                                                                                                  | Why the docs need it                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Entry points             | Main file(s), app bootstrap, providers and wrappers                                                           | Where the code starts executing                      |
-| Routing / dispatch       | URL routes, API routes, resolvers, CLI commands, message handlers                                             | "URL or call → code" tables                          |
-| Folder structure         | Purpose of each top-level folder; naming conventions                                                          | Folder tour                                          |
-| Configuration            | Config files, env vars, how they merge, which one wins, per-environment or per-client variants, feature flags | Most "why does it behave differently in X" questions |
-| Data access              | API client, queries/mutations, ORM/repositories, caches                                                       | Data flow in every module page                       |
-| Auth & permissions       | Login flow, roles/groups, permission checks and where they're enforced                                        | Access rows in "where to change"                     |
-| Shared code              | Components, hooks, utilities and services used in many places, **with importer counts**                       | Change impact page                                   |
-| Generated files          | What generates them and when (build hooks, codegen)                                                           | So readers edit the source, not the output           |
-| External/shared packages | Internal org packages, vendored code, important third-party libraries                                         | Behaviour that lives outside the repo                |
-| Build, test, deploy      | Commands, CI stages, environments, release/versioning                                                         | Setup and deploy pages                               |
-| Background work          | Cron jobs, queues, triggers, webhooks, scheduled functions                                                    | Backend pages                                        |
-| Error handling & logging | Where errors are caught, shown and logged                                                                     | Gotchas                                              |
+| Area                     | What to find                                                                                                                                                                               | Why the docs need it                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| Entry points             | Main file(s), app bootstrap, providers and wrappers                                                                                                                                        | Where the code starts executing                      |
+| Routing / dispatch       | URL routes, API routes, resolvers, CLI commands, message handlers                                                                                                                          | "URL or call → code" tables                          |
+| Folder structure         | Purpose of each top-level folder; naming conventions                                                                                                                                       | Folder tour                                          |
+| Configuration            | Config files, env var **names** (from templates and the code that reads them, never real env files), how they merge, which one wins, per-environment or per-client variants, feature flags | Most "why does it behave differently in X" questions |
+| Data access              | API client, queries/mutations, ORM/repositories, caches                                                                                                                                    | Data flow in every module page                       |
+| Auth & permissions       | Login flow, roles/groups, permission checks and where they're enforced                                                                                                                     | Access rows in "where to change"                     |
+| Shared code              | Components, hooks, utilities and services used in many places, **with importer counts**                                                                                                    | Change impact page                                   |
+| Generated files          | What generates them and when (build hooks, codegen)                                                                                                                                        | So readers edit the source, not the output           |
+| External/shared packages | Internal org packages, vendored code, important third-party libraries                                                                                                                      | Behaviour that lives outside the repo                |
+| Build, test, deploy      | Commands, CI stages, environments, release/versioning                                                                                                                                      | Setup and deploy pages                               |
+| Background work          | Cron jobs, queues, triggers, webhooks, scheduled functions                                                                                                                                 | Backend pages                                        |
+| Error handling & logging | Where errors are caught, shown and logged                                                                                                                                                  | Gotchas                                              |
 
 ### Extra checks by project type
 
@@ -148,7 +149,15 @@ git show origin/develop:src/path/to/file.js
 git -C ../backend grep -n "getOrder"
 ```
 
-Adapt the patterns to the language and the import style.
+Adapt the patterns to the language and the import style. Prefer `git grep` and
+`git ls-files`: they skip ignored files, so they never search inside local env
+or secret files. If you use `grep -r` or `rg`, exclude the secret patterns from
+SKILL.md rule 7.
+
+```bash
+# which env variables the app reads (names only; no env file is opened)
+git grep -h -o -E "process\.env\.[A-Z0-9_]+|os\.environ(\.get)?\(['\"][A-Z0-9_]+" | sort -u
+```
 
 ### Record as you go (scratch notes, not in the repo)
 

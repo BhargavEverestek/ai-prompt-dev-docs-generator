@@ -12,6 +12,23 @@ scratch.
 `ai-prompt-dev-docs-generator/kit`. Replace it with the real path when the kit
 is set up.
 
+**Never open secret files.** Everything you read goes to your AI provider. Don't
+read, diff, search inside or print:
+
+- local or gitignored env files (`.env`, `.env.local`, `.env.*.local`);
+- keys and certificates (`*.pem`, `*.key`, `*.p12`, `*.pfx`, `id_rsa*`);
+- credential data files: a name containing `credential`, `secret` or
+  `service-account` with a data or config extension (`.json`, `.yml`, `.yaml`,
+  `.toml`, `.ini`, `.properties`, `.txt`, `.env`, or none), such as
+  `secrets.yml`;
+- other credential files (`*.tfvars`, `*.tfstate`, `.npmrc`, `.netrc`, `.aws/`,
+  `.ssh/`).
+
+Source code is always readable, whatever its name (`secrets.py`,
+`CredentialsForm.jsx`). Skip the files above even when they appear in a diff.
+Learn config from templates such as `.env.example` and from the code that reads
+it. The full rule is in `ai-prompt-dev-docs-generator/SKILL.md`, rule 7.
+
 ## Steps
 
 1. **Find what changed.** Run `node <kit>/check.js --fetch --json`.
