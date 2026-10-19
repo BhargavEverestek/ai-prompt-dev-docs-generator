@@ -72,15 +72,53 @@ deliver Markdown only.
    (see `references/page-templates.md`) instead of guessing.
 6. **Short and plain.** Use tables before prose and numbered steps for flows.
    Aim for a 10–15 minute read per module page.
-7. **No sensitive content.** Never copy secrets, keys, tokens, passwords,
-   connection strings or personal data. Refer to config by its key and file, not
-   its value. Ask before naming customers or clients found in config.
-8. **Leave generated files alone.** Don't edit them, and describe the source
+7. **Never open secret files.** Everything you read is sent to your AI provider,
+   so don't read, print, search inside or copy any of these:
+
+   - local env files: `.env`, `.env.local`, `.env.*.local`, and any other
+     `.env*` file that git ignores (`git check-ignore -q <file>` succeeds);
+   - keys and certificates: `*.pem`, `*.key`, `*.p12`, `*.pfx`, `*.jks`,
+     `*.keystore`, `id_rsa*`, `id_ed25519*`;
+   - credential **data** files: a name containing `credential`, `secret` or
+     `service-account`, **and** a data or config extension (`.json`, `.yml`,
+     `.yaml`, `.toml`, `.ini`, `.properties`, `.txt`, `.env`, or none). For
+     example `secrets.yml`, `credentials.json` or `service-account-prod.json`;
+   - other credential files: `*.tfvars`, `*.tfstate`, `kubeconfig`, `.npmrc`,
+     `.pypirc`, `.netrc`, `.docker/config.json`, and anything in `.aws/` or
+     `.ssh/`;
+   - commands that print secrets: `env`, `printenv`, `set`,
+     `kubectl get secret`, `docker inspect`, cloud secret-manager reads.
+
+   **Source code is always readable, whatever its name.** Code holds logic, not
+   passwords: `secrets.py`, `credentials.service.ts` and `CredentialsForm.jsx`
+   are normal code files to read and document. The name check above applies only
+   to data and config files. Keys and certificates stay blocked whatever their
+   name.
+
+   Learn configuration from what's safe instead:
+
+   - templates (`.env.example`, `.env.sample`, `.env.template`);
+   - the code that reads each variable (`process.env.X`, `os.environ`,
+     `@Value`);
+   - variable names in CI and infrastructure files (names, never values);
+   - the README.
+
+   Search with `git grep` and list files with `git ls-files`. Both skip ignored
+   files, unlike `grep -r` or `rg`. If a fact exists only in a secret file, ask
+   the user or mark it "to confirm". If you notice a secret committed in a
+   tracked file, don't repeat it anywhere. Tell the user the file in your report
+   (not in the docs) so they can rotate it.
+
+8. **No sensitive content in the docs.** Never copy secrets, keys, tokens,
+   passwords, connection strings or personal data. Refer to config by its key
+   and file, not its value. Ask before naming customers or clients found in
+   config.
+9. **Leave generated files alone.** Don't edit them, and describe the source
    they're generated from instead.
-9. **Ask well.** Ask only what the code can't answer. Batch questions at the
-   checkpoints, number them, and give a recommended default for each
-   (`references/questions.md`).
-10. **Don't commit or push unless asked.** Work on a dedicated docs branch once
+10. **Ask well.** Ask only what the code can't answer. Batch questions at the
+    checkpoints, number them, and give a recommended default for each
+    (`references/questions.md`).
+11. **Don't commit or push unless asked.** Work on a dedicated docs branch once
     the user agrees to one.
 
 ## Workflow
